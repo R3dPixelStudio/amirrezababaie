@@ -6,10 +6,10 @@ import * as THREE from 'three';
 const NodeElement = ({ position, scale = 1, color = "#4f46e5" }: { position: [number, number, number], scale?: number, color?: string }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.getElapsedTime() * 0.2;
-      meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.3;
+      meshRef.current.rotation.x += delta * 0.2;
+      meshRef.current.rotation.y += delta * 0.3;
     }
   });
 
@@ -51,7 +51,7 @@ const NetworkScene = () => {
 export default function CanvasContainer() {
   return (
     <div className="fixed inset-0 z-0 print-hidden bg-[#050505] pointer-events-auto">
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} dpr={[1, 2]}>
         <NetworkScene />
         <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} makeDefault />
       </Canvas>
