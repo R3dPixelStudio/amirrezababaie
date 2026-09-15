@@ -1,0 +1,6 @@
+{
+  "name": "Amirreza Babaei - IT Portfolio",
+  "description": "3D animated web portfolio and PDF CV generator for Amirreza Babaei.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
