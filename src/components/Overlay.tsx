@@ -1,10 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Download, Terminal, Server, Shield, Cloud } from 'lucide-react';
+import { Download, Terminal, Server, Shield, Cloud, Network, BarChart, Code, Database, Headphones, GitMerge, Brain, Monitor } from 'lucide-react';
 import { resumeData } from './ResumeData';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const getSkillIcon = (skillName: string) => {
+  switch (skillName) {
+    case "Cloud Computing": return <Cloud size={24} />;
+    case "Networking": return <Network size={24} />;
+    case "Cybersecurity": return <Shield size={24} />;
+    case "Data Analysis": return <BarChart size={24} />;
+    case "Software Development": return <Code size={24} />;
+    case "Database Management": return <Database size={24} />;
+    case "IT Support": return <Headphones size={24} />;
+    case "DevOps": return <GitMerge size={24} />;
+    case "Machine Learning": return <Brain size={24} />;
+    case "Virtualization": return <Monitor size={24} />;
+    default: return <Terminal size={24} />;
+  }
+};
 
 export default function Overlay() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,6 +52,23 @@ export default function Overlay() {
           }
         );
       });
+
+      // Skill cards stagger animation
+      gsap.utils.toArray('.skill-card').forEach((card: any, i) => {
+        gsap.fromTo(card, { y: 20, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 0.5, delay: (i % 5) * 0.1,
+          scrollTrigger: { trigger: '.skills-container', start: 'top 85%' }
+        });
+      });
+
+      // Progress bars animation
+      gsap.utils.toArray('.progress-fill').forEach((bar: any) => {
+        const targetWidth = bar.getAttribute('data-width');
+        gsap.fromTo(bar, { width: '0%' }, {
+          width: `${targetWidth}%`, duration: 1.5, ease: 'power3.out',
+          scrollTrigger: { trigger: bar, start: 'top 90%' }
+        });
+      });
     }, containerRef);
 
     return () => ctx.revert();
@@ -46,9 +79,9 @@ export default function Overlay() {
   };
 
   return (
-    <div ref={containerRef} className="relative z-10 w-full min-h-screen text-slate-200 no-scrollbar overflow-y-auto print-hidden">
+    <div ref={containerRef} className="relative z-10 w-full min-h-screen text-slate-200 pointer-events-none print-hidden">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full p-6 flex justify-between items-center backdrop-blur-sm border-b border-white/5 z-50">
+      <nav className="fixed top-0 left-0 w-full p-6 flex justify-between items-center backdrop-blur-sm border-b border-white/5 z-50 pointer-events-auto">
         <div className="text-xl font-bold tracking-tighter text-indigo-400">AB.SYS_ADMIN</div>
         <button
           onClick={handlePrint}
@@ -61,7 +94,7 @@ export default function Overlay() {
 
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col justify-center px-8 md:px-24 max-w-7xl mx-auto pt-20">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl pointer-events-auto">
           <h2 className="hero-element text-indigo-400 font-mono tracking-widest text-sm mb-4 uppercase">System Identity Initialized</h2>
           <h1 className="hero-element text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white">
             {resumeData.name}
@@ -87,27 +120,55 @@ export default function Overlay() {
         </div>
       </section>
 
-      {/* Skills Section */}
+      {/* Skills & Languages Section */}
       <section className="min-h-screen py-24 px-8 md:px-24 max-w-7xl mx-auto flex flex-col justify-center border-t border-white/5 bg-black/20 backdrop-blur-md">
-        <div className="scroll-section">
+        <div className="scroll-section w-full pointer-events-auto">
           <div className="flex items-center gap-4 mb-12">
             <Terminal className="text-indigo-500" size={32} />
             <h2 className="text-3xl font-bold text-white tracking-tight">Core Competencies</h2>
           </div>
           
-          <div className="flex flex-wrap gap-3">
+          <div className="skills-container grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {resumeData.skills.map((skill, index) => (
-              <span key={index} className="px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 rounded-lg transition-colors text-sm font-medium">
-                {skill}
-              </span>
+              <div key={index} className="skill-card flex flex-col items-center justify-center p-6 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-indigo-500/50 rounded-xl transition-all group hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)]">
+                <div className="text-slate-400 group-hover:text-indigo-400 transition-colors mb-3">
+                  {getSkillIcon(skill)}
+                </div>
+                <span className="text-slate-200 text-sm font-medium text-center group-hover:text-white transition-colors">
+                  {skill}
+                </span>
+              </div>
             ))}
+          </div>
+
+          <div className="mt-24 max-w-3xl">
+            <h2 className="text-3xl font-bold text-white tracking-tight mb-8">Languages</h2>
+            <div className="space-y-8">
+              {resumeData.languages.map((lang, idx) => (
+                <div key={idx} className="w-full">
+                  <div className="flex justify-between items-end mb-3">
+                    <span className="text-slate-200 font-semibold text-lg">{lang.name}</span>
+                    <span className="text-indigo-400 font-mono text-sm tracking-wide bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">{lang.level}</span>
+                  </div>
+                  <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/10">
+                    <div
+                      className="progress-fill h-full bg-gradient-to-r from-indigo-600 to-cyan-400 rounded-full relative shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                      data-width={lang.progress}
+                      style={{ width: '0%' }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 w-full h-full animate-pulse rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Experience Section */}
       <section className="min-h-screen py-24 px-8 md:px-24 max-w-7xl mx-auto flex flex-col justify-center">
-        <div className="scroll-section">
+        <div className="scroll-section pointer-events-auto">
           <h2 className="text-3xl font-bold text-white tracking-tight mb-12">Professional Experience</h2>
           
           <div className="space-y-12">
@@ -134,7 +195,7 @@ export default function Overlay() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-white/10 text-center text-slate-500 text-sm">
+      <footer className="py-12 border-t border-white/10 text-center text-slate-500 text-sm pointer-events-auto">
         <p>Terminal output complete. End of transmission.</p>
         <p className="mt-2 text-indigo-400/50">{resumeData.email}</p>
       </footer>

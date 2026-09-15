@@ -19,6 +19,9 @@ export const resumeData = {
     "Machine Learning",
     "Virtualization",
   ],
+  languages: [
+    { name: "English", level: "C1 Advanced", progress: 85 }
+  ],
   experience: [
     {
       title: "IT Specialist",

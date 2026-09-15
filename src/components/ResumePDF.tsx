@@ -37,6 +37,18 @@ export default function ResumePDF() {
           </section>
 
           <section>
+            <h3 className="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Languages</h3>
+            <div className="space-y-2">
+              {resumeData.languages.map((lang, index) => (
+                <div key={index} className="flex justify-between text-sm text-gray-700 border-b border-gray-100 pb-1 last:border-0">
+                  <span className="font-semibold">{lang.name}</span>
+                  <span className="text-indigo-600 font-medium text-xs">{lang.level}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
             <h3 className="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3 uppercase tracking-wider">Education</h3>
             {resumeData.education.map((edu, index) => (
               <div key={index} className="mb-3">
